@@ -20,30 +20,19 @@ boolean a_enabled = false;
 boolean b_enabled = false;
 boolean c_enabled = false;
 
-//---------------HEIM-Netz--------------------------
+
 // Deklaration der MAC-Adresse des Ethernet-Ports
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 // Deklaration einer statischen IP-Adresse innerhalb des Heimnetzwerks
-byte ip[] = { 192,168,178,65 }; 
+byte ip[] = { AAA,BBB,CCC,DDD }; 
 // DNS
-byte dns1[] = {192,168,178,65};
+byte dns1[] = {AAA,BBB,CCC,DDD};
 // Gateway
-byte gateway[] = { 192,168,178,1 }; 
+byte gateway[] = { AAA,BBB,CCC,DDD }; 
 // Subnetz-Maske
 byte subnet[] = { 255, 255, 255, 0 };
-/*
-//---------------HAW NETZ--------------------------
-// Deklaration der MAC-Adresse des Ethernet-Ports
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-// Deklaration einer statischen IP-Adresse innerhalb des Heimnetzwerks
-byte ip[] = { 141,22,50,235 }; 
-// DNS
-byte dns1[] = {141,22,50,74};
-// Gateway
-byte gateway[] = { 141,22,50,1 }; 
-// Subnetz-Maske
-byte subnet[] = { 255, 255, 254, 0 };
-*/
+
+
 
 // Default-Port 80
 EthernetServer server(80);
@@ -54,6 +43,7 @@ String readString;
 // login variablen
 String user = "?id=Admin";
 String password = "&pass=1234";
+
 boolean security = false;
 
 
@@ -63,7 +53,6 @@ void setup() {
    while (!Serial) {
     ; // warten bis der Serial-Port verbunden ist
   }
-  
   // PINs als Ausgänge setzen
   
   pinMode(a_ON, OUTPUT);
@@ -92,13 +81,18 @@ void setup() {
 // Logout schaltet alle Schalter aus
 }
 void shutdownAllSwitches(){
-   digitalWrite(a_OFF, LOW);
-   digitalWrite(b_OFF, LOW);
-   digitalWrite(c_OFF, LOW);
+  digitalWrite(a_OFF, LOW);
    delay(500);
    digitalWrite(a_OFF,HIGH);
+   delay(500);
+   digitalWrite(b_OFF, LOW);
+   delay(500);
    digitalWrite(b_OFF,HIGH);
+   delay(500);
+   digitalWrite(c_OFF, LOW);
+   delay(500);
    digitalWrite(c_OFF,HIGH);
+   
    a_enabled = false;
    b_enabled = false;
    c_enabled = false;
@@ -203,10 +197,13 @@ void control(){
       
       // Methode für String-Vergleiche
       void stringReader(){
-         //prüfe ob Username und Passwort stimmen
-           if (readString.indexOf(user+password)>0){       
+         //prüfe ob Username und Passwort stimmen           
+           if (readString.indexOf(user+password)>0){      
              security = true;     
            }
+           
+          
+           
            // Schalter AN und AUS
            if (readString.indexOf("?aON") >0){
                a_enabled = true;
@@ -286,7 +283,7 @@ void loop() {
            
            //URL String lesen
            stringReader();
-           
+        
            //Sicherheitsabfrage
            if(!security){
              login();
